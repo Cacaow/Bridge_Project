@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from SB_calculations import SFD_BMD 
 
 def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
+    print("Computing envelope...")
     """
     Compute shear force and bending moment envelopes for a train
     moving across a simply supported bridge — NO zip() used.
@@ -35,6 +36,7 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
         # Convert to numpy arrays
         x_loads = np.array(x_loads)
         P_loads = np.array(P_loads)
+        print(P_loads, x_loads)
 
         SFD, BMD = SFD_BMD(L, n, P_loads, x0)
 

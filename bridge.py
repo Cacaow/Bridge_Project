@@ -99,47 +99,11 @@ upper_flange_height = 1.27 * upper_flange_thickness
 lower_flange_height = 1.27 * lower_flange_thickness
 webbing_width = 1.27 * webbing_thickness
 
-##add BMD and SFD function here???
-
-# takes input of a list, dimension, returns ybar (in mm) and I (in mm^4) values
-def y_bar_and_I(dimension):
-    A_web = webbing_width * dimension[0] ## area of ONE of the webbings
-    A_upper = upper_flange_height * dimension[1]
-    A_lower = lower_flange_height * dimension[2]
-
-    y_lower = lower_flange_height / 2
-    y_web = lower_flange_height + dimension[0] / 2
-    y_upper = lower_flange_height + dimension[0] + upper_flange_height/2
-
-    A_total = A_web + A_upper + A_lower
-
-    ybar = (1/A_total) * (2*A_web*y_web + A_upper*y_upper + A_lower*y_lower)
-
-    ## I calculations
-
-    d_upper = y_upper - ybar
-    d_lower = ybar - y_lower
-    d_web = abs(ybar - y_web)
-
-    I_web = ((webbing_width * dimension[0]**3) / 12) + A_web * d_web**2
-    I_upper = ((dimension[1] * upper_flange_height**3) / 12) + A_upper * d_upper**2
-    I_lower = ((dimension[2] * lower_flange_height**3) / 12) + A_lower * d_lower**2
-
-    inertia = I_web + I_lower + I_upper
-
-    return ybar, inertia
-
-
-def FOS(): ##add this
-    None
-
-
 
 ## FINDING OPTIMAL DESIGN (loop)
 
 best_min_FOS = 0
 best_dimensions = []
-print("here")
 
 # Precompute expensive envelope once and reuse for all section checks
 # compute_envelope returns (x, SFD_env, BMD_env)
@@ -152,7 +116,7 @@ for dim in dimensions:
     #SFD_BMD(L, n, P_train, x) 
     
     # pass precomputed graphs to avoid recomputing envelope each iteration
-    FoS = prop(dim[0], dim[1], dim[2], L, n, P_train, x_train, dx, graphs=graphs)
+    FoS = prop(dim[0], dim[1], dim[2], dim[3], graphs=graphs)
     
     min_FOS = min(FoS)
 

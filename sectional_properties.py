@@ -12,14 +12,13 @@ S_tens = 30
 S_comp = 6
 T_max = 4
 
-def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx, graphs=None):
+def prop(h_web, tfw, bfw, d_web, graphs=None):
     """Compute factors of safety for a section.
 
     `graphs`, if provided, should be the tuple returned by
     `compute_envelope` -> `(x, SFD_env, BMD_env)` so the heavy envelope
     calculation can be performed once and reused across many calls.
     """
-    print("in prop")
     A_top = tfw * tft
     A_bottom = bfw * bft
     A_web = 2 * (h_web * t_web)
@@ -49,25 +48,25 @@ def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx, graphs=None):
 
     #Thin Plate 
     #case 1: Compresion in the top flange
-    k1 = 5
+    k1 = 4
     #strange calculation??
     b1 = tfw - (tfw - bfw) - (t_web/2 * 2)
     S_b1 = (k1 * math.pi**2 * E) / (12 * (1 - mu**2)) * (tft / b1)**2
 
     #case 2: Compression in the bottom flange
     k2 = 0.425
-    b2 = (tfw - b1) / 2
+    b2 = (tfw - d_web - t_web * 2) / 2
     S_b2 = (k2 * math.pi**2 * E) / (12 * (1 - mu**2)) * (tft / b2)**2
 
     #case 3: Buckling in web
     k3 = 6
     b3 = t_web
     t3 = (h_web + bft - ybar)
-    S_b3 = (k3 * math.pi**2 * E) / (12 * (1 - mu**2)) * (t3 / b3)**2
+    S_b3 = (k3 * math.pi**2 * E) / (12 * (1 - mu**2)) * (h_web / t_web)**2
 
     #case 4: Shear in web
     k_shear = 5
-    T_b = (k_shear * math.pi**2 * E) / (12 * (1 - mu**2)) * (t_web / h_web)**2
+    T_b = (k_shear * math.pi**2 * E) / (12 * (1 - mu**2)) * ((t_web / h_web)**2 + (t_web/d_web)**2)
 
 
     #FOS
