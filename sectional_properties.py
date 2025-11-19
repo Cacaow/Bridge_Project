@@ -1,5 +1,6 @@
 from fold_envelope import compute_envelope 
 import math
+import numpy as np
 
 tft = 1.27 * 1
 bft = 1.27 
@@ -11,8 +12,14 @@ S_tens = 30
 S_comp = 6
 T_max = 4
 
-def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx):
+def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx, graphs=None):
+    """Compute factors of safety for a section.
 
+    `graphs`, if provided, should be the tuple returned by
+    `compute_envelope` -> `(x, SFD_env, BMD_env)` so the heavy envelope
+    calculation can be performed once and reused across many calls.
+    """
+    print("in prop")
     A_top = tfw * tft
     A_bottom = bfw * bft
     A_web = 2 * (h_web * t_web)
@@ -35,7 +42,7 @@ def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx):
     Q_cent = A_top * (y_top - ybar) + Q_web
 
     #Stress calculations
-    graphs = compute_envelope(L, n, P_train, axle_positions, dx)
+    SFD_env, BMD_env = graphs
     S_top = abs(graphs[0]) * (tft + h_web + bft - ybar) / I_total
     S_bot = abs(graphs[1]) * ybar / I_total
     T_cent = abs(graphs[0]) * Q_cent / (I_total * t_web * 2)
@@ -72,25 +79,27 @@ def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx):
     FOS_buckling3 = S_b3 / max(S_top)
     FOS_buckling4 = T_b / max(T_cent)
     
-    FOS = [min(FOS_tens), min(FOS_comp), min(FOS_shear), min(FOS_buckling1), min(FOS_buckling2), min(FOS_buckling3), min(FOS_buckling4)]
+    FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
     Pfail = []
-
+    """
     for j in FOS:
         Pfails = P_train * 6 * j
         Pfail.append(Pfails)
-
+    """
     #Vfail and Mfail
-    Mf_tens = FOS_tens * abs(graphs[1])
-    Mf_comps = FOS_comp * abs(graphs[1])
+    Mf_tens = FOS[0] * np.abs(BMD_env)
+    Mf_comps = FOS[1] * np.abs(BMD_env)
 
-    Vf_shear = FOS_shear * abs(graphs[0])
+    Vf_shear = FOS[2] * np.abs(SFD_env)
 
-    Mf_buckling1 = FOS_buckling1 * abs(graphs[1])
-    Mf_buckling2 = FOS_buckling2 * abs(graphs[1])
-    Mf_buckling3 = FOS_buckling3 * abs(graphs[1])
-    Vf_buckling4 = FOS_buckling4 * abs(graphs[0])
+    Mf_buckling1 = FOS[3] * np.abs(BMD_env)
+    Mf_buckling2 = FOS[4] * np.abs(BMD_env)
+    Mf_buckling3 = FOS[5] * np.abs(BMD_env)
+    Vf_buckling4 = FOS[6] * np.abs(SFD_env)
 
-    return Pfail, Mf_tens, Mf_comps, Vf_shear, Mf_buckling1, Mf_buckling2, Mf_buckling3, Vf_buckling4
+    buckle = [Mf_buckling1, Mf_buckling2, Mf_buckling3, Vf_buckling4]
+
+    return FOS
 
 
 

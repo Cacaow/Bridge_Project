@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from SB_calculations import SFD_BMD 
 
 def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
     """
@@ -13,7 +14,7 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
 
     # Train moves from left of the bridge to the far right
     x0_start = -max(axle_positions)
-    x0_end   = L
+    x0_end = L
 
     for x0 in np.arange(x0_start, x0_end + dx_step, dx_step):
 
@@ -35,39 +36,7 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
         x_loads = np.array(x_loads)
         P_loads = np.array(P_loads)
 
-        # Compute reactions: simply supported
-        total_load = 0.0
-        moment_sum = 0.0
-        for i in range(num_loads):
-            total_load += P_loads[i]
-            moment_sum += P_loads[i] * x_loads[i]
-
-        RB = moment_sum / L
-        RA = total_load - RB
-
-        # Compute SFD + BMD for this train position
-        SFD = np.zeros(n+1)
-        BMD = np.zeros(n+1)
-
-        for i in range(len(x)):
-            xi = x[i]
-
-            # Start with left reaction
-            S = RA
-
-            # Subtract axle loads to the left of point xi
-            for j in range(num_loads):
-                if xi >= x_loads[j]:
-                    S -= P_loads[j]
-
-            SFD[i] = S
-
-            # Integrate shear to get bending moment
-            if i == 0:
-                BMD[i] = 0
-            else:
-                dx = x[i] - x[i-1]
-                BMD[i] = BMD[i-1] + SFD[i-1] * dx
+        SFD, BMD = SFD_BMD(L, n, P_loads, x0)
 
         # Update envelopes
         for i in range(n+1):
@@ -76,7 +45,7 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
             if abs(BMD[i]) > BMD_max[i]:
                 BMD_max[i] = abs(BMD[i])
 
-    return x, SFD_max, BMD_max
+    return SFD_max, BMD_max
 
 
 # ----- Example usage -----

@@ -1,5 +1,6 @@
 from SB_calculations import SFD_BMD
 from sectional_properties import prop
+from fold_envelope import compute_envelope
 import math
 
 ## VARIABLE NAMES
@@ -138,20 +139,28 @@ def FOS(): ##add this
 
 best_min_FOS = 0
 best_dimensions = []
+print("here")
+
+# Precompute expensive envelope once and reuse for all section checks
+# compute_envelope returns (x, SFD_env, BMD_env)
+graphs = compute_envelope(L, n, P_train, x_train, dx)
 
 for dim in dimensions: 
-    inertia, y = y_bar_and_I(dim) ## python yells at me for using I so i called the variable "inertia"
+    # correct unpacking: ybar, inertia
+    #ybar, inertia = y_bar_and_I(dim)
     #FOS = FOS(dim, inertia, y) ## change depending on what parameters u want to add in FOS function
     #SFD_BMD(L, n, P_train, x) 
-
-    prop = prop(dim[0], dim[1], dim[2], L, n, P_train, x_train, dx)
-    min_FOS = min(prop)
+    
+    # pass precomputed graphs to avoid recomputing envelope each iteration
+    FoS = prop(dim[0], dim[1], dim[2], L, n, P_train, x_train, dx, graphs=graphs)
+    
+    min_FOS = min(FoS)
 
     if min_FOS > best_min_FOS:
         best_min_FOS = min_FOS
         best_dimensions = dim
 
 Load_Capacity = P * best_min_FOS
-print("the best dimensions are: " + best_dimensions)
-print("the min FOS of this design is: " + dim)
-print("the load capacity of this design is: " + Load_Capacity)
+print("the best dimensions are:", best_dimensions)
+print("the min FOS of this design is:", best_min_FOS)
+print("the load capacity of this design is:", Load_Capacity)
