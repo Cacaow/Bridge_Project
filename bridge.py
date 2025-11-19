@@ -74,9 +74,10 @@ for height in range(20, 200, 20):
     for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
         for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
             for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step):
-                diaphragm_area = 813 * 1016 - 1250 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
-                dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_area]
-                if diaphragm_area >= 0:
+                total_diaphragm_area = 813 * 1016 - 1250 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
+                if total_diaphragm_area > 0:
+                    diaphragm_spacing = 1250/(total_diaphragm_area / (distance_between_webbing * height))
+                    dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing]
                     dimensions.append(dimension)
 
 
