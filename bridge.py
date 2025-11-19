@@ -22,6 +22,10 @@ import math
 #tau_m = 4 MPa 
 #tau_g = 2 MPa
 
+#L: length of bridge
+#n: ????
+# P: weight of train
+
 #upper_flange_height: height of upper flange (int)
 #lower_flange_height: height of lower flange (int)
 #webbing_width: width of webbing  (int)
@@ -86,9 +90,15 @@ sigma_c = 6 #MPa
 tau_m = 4 #MPa 
 tau_g = 2 #MPa
 
+L = 1200 #mm
+n = 1200 
+P = 1000 #N
+
 upper_flange_height = 1.27 * upper_flange_thickness
 lower_flange_height = 1.27 * lower_flange_thickness
 webbing_width = 1.27 * webbing_thickness
+
+##add BMD and SFD function here???
 
 # takes input of a list, dimension, returns ybar (in mm) and I (in mm^4) values
 def y_bar_and_I(dimension):
