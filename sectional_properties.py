@@ -1,10 +1,10 @@
 from fold_envelope import compute_envelope 
 import math
 
-tft = 1.27 * 3
+tft = 1.27 * 1
 bft = 1.27 
-t_web = 1.27 * 2
-a_web = 20
+t_web = 1.27 * 1
+#a_web = 20
 E = 4000
 mu = 0.2
 S_tens = 30
@@ -24,9 +24,9 @@ def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx):
 
     ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web) / A_total
 
-    I_top = (tfw * tft^3 / 12) + (A_top * (y_top - ybar)^2)
-    I_bottom = (bfw * bft^3 / 12) + (A_bottom * (y_bot - ybar)^2)
-    I_web = 2 * ((t_web * h_web^3 / 12) + (A_web/2 * (y_web - ybar)^2))
+    I_top = (tfw * tft**3 / 12) + (A_top * (y_top - ybar)**2)
+    I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2)
+    I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
     I_total = I_top + I_bottom + I_web
 
     #Q at centroid
@@ -45,22 +45,22 @@ def prop(h_web, tfw, bfw, L, n, P_train, axle_positions, dx):
     k1 = 5
     #strange calculation??
     b1 = tfw - (tfw - bfw) - (t_web/2 * 2)
-    S_b1 = (k1 * math.pi^2 * E) / (12 * (1 - mu^2)) * (tft / b1)^2
+    S_b1 = (k1 * math.pi**2 * E) / (12 * (1 - mu**2)) * (tft / b1)**2
 
     #case 2: Compression in the bottom flange
     k2 = 0.425
     b2 = (tfw - b1) / 2
-    S_b2 = (k2 * math.pi^2 * E) / (12 * (1 - mu^2)) * (tft / b2)^2
+    S_b2 = (k2 * math.pi**2 * E) / (12 * (1 - mu**2)) * (tft / b2)**2
 
     #case 3: Buckling in web
     k3 = 6
     b3 = t_web
     t3 = (h_web + bft - ybar)
-    S_b3 = (k3 * math.pi^2 * E) / (12 * (1 - mu^2)) * (t3 / b3)^2
+    S_b3 = (k3 * math.pi**2 * E) / (12 * (1 - mu**2)) * (t3 / b3)**2
 
     #case 4: Shear in web
     k_shear = 5
-    T_b = (k_shear * math.pi^2 * E) / (12 * (1 - mu^2)) * (t_web / h_web)^2
+    T_b = (k_shear * math.pi**2 * E) / (12 * (1 - mu**2)) * (t_web / h_web)**2
 
 
     #FOS

@@ -1,3 +1,7 @@
+from SB_calculations import SFD_BMD
+from sectional_properties import prop
+import math
+
 ## VARIABLE NAMES
 
 #manual input variables:
@@ -28,6 +32,16 @@
 #y: ybar, defined by y_bar_and_I() function called in loop (float)
 #inertia: I-value, defined by y_bar_and_I() function called in loop (float)
 
+
+#initalize values
+L = 1200
+n = 1200
+dx = L/n
+x = [i*dx for i in range(n)]
+P = 400
+
+x_train = [52, 228, 392, 568, 732, 908]
+P_train = [P/6]*6
 
 
 ## MANUAL INPUTS
@@ -117,14 +131,17 @@ best_dimensions = []
 
 for dim in dimensions: 
     inertia, y = y_bar_and_I(dim) ## python yells at me for using I so i called the variable "inertia"
-    FOS = FOS(dim, inertia, y) ## change depending on what parameters u want to add in FOS function
-    min_FOS = min(FOS)
+    #FOS = FOS(dim, inertia, y) ## change depending on what parameters u want to add in FOS function
+    #SFD_BMD(L, n, P_train, x) 
+
+    prop = prop(dim[0], dim[1], dim[2], L, n, P_train, x_train, dx)
+    min_FOS = min(prop)
 
     if min_FOS > best_min_FOS:
         best_min_FOS = min_FOS
         best_dimensions = dim
 
-Load_Capacity = p * best_min_FOS
+Load_Capacity = P * best_min_FOS
 print("the best dimensions are: " + best_dimensions)
 print("the min FOS of this design is: " + dim)
 print("the load capacity of this design is: " + Load_Capacity)
