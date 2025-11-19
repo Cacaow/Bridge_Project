@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from SB_calculations import SFD_BMD 
 
 def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
-    print("Computing envelope...")
     """
     Compute shear force and bending moment envelopes for a train
     moving across a simply supported bridge — NO zip() used.
@@ -21,13 +20,11 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
 
         # Compute axle locations for current train position
         x_loads = []
-        P_loads = []
 
         for i in range(len(axle_positions)):
             xi = x0 + axle_positions[i]
             if 0 <= xi <= L:
                 x_loads.append(xi)
-                P_loads.append(P_train[i])
 
         num_loads = len(x_loads)
         if num_loads == 0:
@@ -35,8 +32,7 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
 
         # Convert to numpy arrays
         x_loads = np.array(x_loads)
-        P_loads = np.array(P_loads)
-        print(P_loads, x_loads)
+        P_loads = np.array(P_train)
 
         SFD, BMD = SFD_BMD(L, n, P_loads, x0)
 
@@ -46,31 +42,25 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
                 SFD_max[i] = abs(SFD[i])
             if abs(BMD[i]) > BMD_max[i]:
                 BMD_max[i] = abs(BMD[i])
+    """
+    # Plot results
+    plt.figure(figsize=(12,5))
+    plt.subplot(1,2,1)
+    plt.plot(x, SFD_max)
+    plt.title("Shear Force Envelope")
+    plt.grid()
 
+    plt.subplot(1,2,2)
+    plt.plot(x, BMD_max)
+    plt.title("Bending Moment Envelope")
+    plt.grid()
+
+    plt.show()
+    """
     return SFD_max, BMD_max
 
 
 # ----- Example usage -----
-"""
-L = 1200
-n = 1200
-P = 400
 
-axles = [52, 228, 392, 568, 732, 908]
 
-x, SFD_env, BMD_env = compute_envelope(L, n, P_train, axles)
 
-# Plot results
-plt.figure(figsize=(12,5))
-plt.subplot(1,2,1)
-plt.plot(x, SFD_env)
-plt.title("Shear Force Envelope")
-plt.grid()
-
-plt.subplot(1,2,2)
-plt.plot(x, BMD_env)
-plt.title("Bending Moment Envelope")
-plt.grid()
-
-plt.show()
-"""

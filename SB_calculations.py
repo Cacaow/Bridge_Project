@@ -51,6 +51,7 @@ def SFD_BMD(L, n, P_train, x0, axle_offsets=None):
         for j in range(len(x_loads)):
             if xi >= x_loads[j]:
                 S -= P_loads[j]
+
         SFD[i] = S
         
         # compute Bending Moment using trapezoidal integration

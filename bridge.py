@@ -91,14 +91,10 @@ sigma_c = 6 #MPa
 tau_m = 4 #MPa 
 tau_g = 2 #MPa
 
-L = 1200 #mm
-n = 1200 
-P = 1000 #N
 
 upper_flange_height = 1.27 * upper_flange_thickness
 lower_flange_height = 1.27 * lower_flange_thickness
 webbing_width = 1.27 * webbing_thickness
-
 
 ## FINDING OPTIMAL DESIGN (loop)
 
@@ -108,7 +104,10 @@ best_dimensions = []
 # Precompute expensive envelope once and reuse for all section checks
 # compute_envelope returns (x, SFD_env, BMD_env)
 graphs = compute_envelope(L, n, P_train, x_train, dx)
-
+FoS, buckling_FOS = prop(75, 100, 80, 77.46, graphs=graphs)
+print("Initial FOS values are:", FoS)
+print("Initial buckling FOS values are:", buckling_FOS)
+"""
 for dim in dimensions: 
     # correct unpacking: ybar, inertia
     #ybar, inertia = y_bar_and_I(dim)
@@ -116,15 +115,19 @@ for dim in dimensions:
     #SFD_BMD(L, n, P_train, x) 
     
     # pass precomputed graphs to avoid recomputing envelope each iteration
-    FoS = prop(dim[0], dim[1], dim[2], dim[3], graphs=graphs)
+    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], graphs=graphs)
     
     min_FOS = min(FoS)
 
     if min_FOS > best_min_FOS:
         best_min_FOS = min_FOS
         best_dimensions = dim
+        best_buckling_FOS = buckling_FOS
 
 Load_Capacity = P * best_min_FOS
 print("the best dimensions are:", best_dimensions)
 print("the min FOS of this design is:", best_min_FOS)
 print("the load capacity of this design is:", Load_Capacity)
+print("FOS values are:", FoS)
+#print("the buckling FOS values are:", best_buckling_FOS)
+"""

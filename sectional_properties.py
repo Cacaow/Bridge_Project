@@ -34,6 +34,7 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
     I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2)
     I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
     I_total = I_top + I_bottom + I_web
+    print("Moment of Inertia is:", I_total)
 
     #Q at centroid
     y_glue_top = bft + h_web
@@ -42,9 +43,9 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
 
     #Stress calculations
     SFD_env, BMD_env = graphs
-    S_top = abs(graphs[0]) * (tft + h_web + bft - ybar) / I_total
-    S_bot = abs(graphs[1]) * ybar / I_total
-    T_cent = abs(graphs[0]) * Q_cent / (I_total * t_web * 2)
+    S_top = abs(BMD_env) * (tft + h_web + bft - ybar) / I_total
+    S_bot = abs(BMD_env) * ybar / I_total
+    T_cent = abs(SFD_env) * Q_cent / (I_total * t_web * 2)
 
     #Thin Plate 
     #case 1: Compresion in the top flange
@@ -98,7 +99,7 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
 
     buckle = [Mf_buckling1, Mf_buckling2, Mf_buckling3, Vf_buckling4]
 
-    return FOS
+    return FOS, buckle
 
 
 
