@@ -73,7 +73,7 @@ best_dimensions = []
 # Precompute expensive envelope once and reuse for all section checks
 # compute_envelope returns (x, SFD_env, BMD_env)
 graphs = compute_envelope(L, n, P_train, x_train, dx)
-FoS, buckling_FOS = prop(75, 100, 80, 77.46, graphs=graphs)
+FoS, buckling_FOS = prop(75, 100, 80, 77.46, 400, graphs=graphs)
 print("Initial FOS values are:", FoS)
 print("Initial buckling FOS values are:", buckling_FOS)
 """

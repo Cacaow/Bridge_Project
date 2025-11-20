@@ -47,10 +47,10 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
 
     #Stress calculations
     SFD_env, BMD_env = graphs
-    S_top = abs(graphs[0]) * (tft + h_web + bft - ybar) / I_total
-    S_bot = abs(graphs[1]) * ybar / I_total
-    T_cent = abs(graphs[0]) * Q_cent / (I_total * t_web * 2)
-    T_glue = abs(graphs[0]) * A_top * (y_top - ybar) / (I_total * t_web * 2)
+    S_top = abs(BMD_env) * (tft + h_web + bft - ybar) / I_total
+    S_bot = abs(BMD_env) * ybar / I_total
+    T_cent = abs(BMD_env) * Q_cent / (I_total * t_web * 2)
+    T_glue = abs(SFD_env) * A_top * (y_top - ybar) / (I_total * t_web * 2)
 
     #Thin Plate Buckling Calculations
 
