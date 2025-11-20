@@ -45,7 +45,7 @@ for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thicknes
                 total_diaphragm_area = 813 * 1016 - 1250 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
                 if total_diaphragm_area > 0:
                     diaphragm_spacing = 1250/(total_diaphragm_area / (distance_between_webbing * height))
-                    dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing]
+                    dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area]
                     dimensions.append(dimension)
 
 
@@ -94,7 +94,7 @@ for dim in dimensions:
         best_min_FOS = min_FOS
         best_dimensions = dim
         best_buckling_FOS = buckling_FOS
-        diaphragm_remaining = total_diaphragm_area
+        diaphragm_remaining = dim[5]
 
 Load_Capacity = P * best_min_FOS
 print("the best dimensions are:", best_dimensions)
@@ -102,4 +102,4 @@ print("the min FOS of this design is:", best_min_FOS)
 print("the load capacity of this design is:", Load_Capacity)
 print("FOS values are:", FoS)
 print("diaphragm area leftover", diaphragm_remaining)
-#print("the buckling FOS values are:", best_buckling_FOS)
+print("the buckling FOS values are:", best_buckling_FOS)
