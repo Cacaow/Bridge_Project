@@ -8,7 +8,7 @@ import math
 
 #initalize values
 L = 1260
-n = 1200
+n = 1260
 dx = L/n
 x = [i*dx for i in range(n)]
 P = 400
@@ -20,7 +20,7 @@ P_train = [P/6]*6
 ## MANUAL INPUTS
 
 # number of layers for specific members
-upper_flange_thickness = 1
+upper_flange_thickness = 2
 lower_flange_thickness = 1
 webbing_thickness = 1 
 
@@ -42,9 +42,9 @@ for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thicknes
     for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
         for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
             for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step):
-                total_diaphragm_area = 813 * 1016 - 1250 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
+                total_diaphragm_area = 813 * 1016 - 1260 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
                 if total_diaphragm_area > 0:
-                    diaphragm_spacing = 1250/(total_diaphragm_area / (distance_between_webbing * height))
+                    diaphragm_spacing = 1260/(total_diaphragm_area / (distance_between_webbing * height))
                     dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area]
                     dimensions.append(dimension)
 
@@ -86,7 +86,7 @@ for dim in dimensions:
     #SFD_BMD(L, n, P_train, x) 
     
     # pass precomputed graphs to avoid recomputing envelope each iteration
-    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], dim[4], upper_flange_height, lower_flange_height, webbing_width, graphs=graphs)
+    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], dim[4], graphs=graphs)
     
     min_FOS = min(FoS)
 
