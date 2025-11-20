@@ -5,38 +5,6 @@ import math
 
 ## VARIABLE NAMES
 
-#manual input variables:
-#upper_flange_thickness: number of layers for the upper flange (int)
-#lower_flange_thickness: number of layers for lower flange (int)
-#webbing_thickness: number of layers for webbings (int)
-#upper_flange_step, lower_flange_step, distance_between_webbing_step: how much each loop increments by (lower = more accurate) (int)
-#upper_flange_bound, lower_flange_bound: max values for upper, lower flange (int)
- 
-#important custom variables
-#dimensions: list containing all possible design dimensions (nested list)
-
-#constants
-#E = 4000 MPa
-#mu = 0.2
-#sigma_t = 30 MPa
-#sigma_c = 6 MPa
-#tau_m = 4 MPa 
-#tau_g = 2 MPa
-
-#L: length of bridge
-#n: ????
-# P: weight of train
-
-#upper_flange_height: height of upper flange (int)
-#lower_flange_height: height of lower flange (int)
-#webbing_width: width of webbing  (int)
-
-#variables in loop 
-#best_min_FOS: value of the minimum FOS for the best design (float)
-#best_dimensions: dimensions for the best design (list)
-#y: ybar, defined by y_bar_and_I() function called in loop (float)
-#inertia: I-value, defined by y_bar_and_I() function called in loop (float)
-
 
 #initalize values
 L = 1200

@@ -5,6 +5,8 @@ import numpy as np
 tft = 1.27 * 1
 bft = 1.27 
 t_web = 1.27 * 1
+t_glue = 1.27
+w_glue = 5
 #a_web = 20
 E = 4000
 mu = 0.2
@@ -23,23 +25,25 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     A_top = tfw * tft
     A_bottom = bfw * bft
     A_web = 2 * (h_web * t_web)
-    A_total = A_top + A_bottom + A_web
+    A_glue = 2 * w_glue * t_glue
+    A_total = A_top + A_bottom + A_web + A_glue
 
     y_top = h_web + bft + tft/2
     y_bot = bft/2
     y_web = bft + h_web/2
+    y_glue = bft + h_web - t_glue/2
 
-    ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web) / A_total
+    ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web + A_glue * y_glue) / A_total
 
     I_top = (tfw * tft**3 / 12) + (A_top * (y_top - ybar)**2)
     I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2)
     I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
-    I_total = I_top + I_bottom + I_web
+    I_glue = 2 * ((w_glue * t_glue**3 / 12) + (A_glue/2 * (y_glue - ybar)**2))
+    I_total = I_top + I_bottom + I_web + I_glue
+    print("Moment of Inertia is:", I_total)
 
     #Q at centroid
-    y_glue_top = bft + h_web
-    Q_web = (h_web + tft - ybar) * t_web * (h_web + tft - ybar)
-    Q_cent = A_top * (y_top - ybar) + Q_web
+    Q_cent = A_bottom*(ybar- bft/2) + (t_web*(ybar - bft))*((ybar - bft)/2)*2
 
     #Stress calculations
     SFD_env, BMD_env = graphs
