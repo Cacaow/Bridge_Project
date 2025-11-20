@@ -11,6 +11,7 @@ mu = 0.2
 S_tens = 30
 S_comp = 6
 T_max = 4
+T_gmax = 2
 
 def prop(h_web, tfw, bfw, d_web, graphs=None):
     """Compute factors of safety for a section.
@@ -75,12 +76,13 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
     FOS_tens = S_tens / max(S_bot)
     FOS_comp = S_comp / max(S_top)
     FOS_shear = T_max / max(T_cent)
+    FOS_glue = T_gmax / max(T_glue)
     FOS_buckling1 = S_b1 / max(S_top)
     FOS_buckling2 = S_b2 / max(S_bot)
     FOS_buckling3 = S_b3 / max(S_top)
     FOS_buckling4 = T_b / max(T_cent)
     
-    FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
+    FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_glue, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
     Pfail = []
     """
     for j in FOS:
