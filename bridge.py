@@ -20,7 +20,7 @@ P_train = [P/6]*6
 ## MANUAL INPUTS
 
 # number of layers for specific members
-upper_flange_thickness = 1
+upper_flange_thickness = 2
 lower_flange_thickness = 1
 webbing_thickness = 1 
 
@@ -38,7 +38,7 @@ lower_flange_bound = 300
 
 dimensions = []
 
-for height in range(20, 200, 20):
+for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness))), 200, 20):
     for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
         for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
             for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step):
@@ -73,10 +73,12 @@ best_dimensions = []
 # Precompute expensive envelope once and reuse for all section checks
 # compute_envelope returns (x, SFD_env, BMD_env)
 graphs = compute_envelope(L, n, P_train, x_train, dx)
-FoS, buckling_FOS = prop(75, 100, 80, 77.46, 400, graphs=graphs)
-print("Initial FOS values are:", FoS)
-print("Initial buckling FOS values are:", buckling_FOS)
-"""
+#FoS, buckling_FOS = prop(75, 100, 80, 77.46, 400, graphs=graphs)
+#print("Initial FOS values are:", FoS)
+#print("Initial buckling FOS values are:", buckling_FOS)
+#min_FOS = min(FoS)
+#print("Initial min FOS is:", min_FOS)
+
 for dim in dimensions: 
     # correct unpacking: ybar, inertia
     #ybar, inertia = y_bar_and_I(dim)
@@ -84,7 +86,7 @@ for dim in dimensions:
     #SFD_BMD(L, n, P_train, x) 
     
     # pass precomputed graphs to avoid recomputing envelope each iteration
-    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], graphs=graphs)
+    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], dim[4], graphs=graphs)
     
     min_FOS = min(FoS)
 
@@ -92,11 +94,12 @@ for dim in dimensions:
         best_min_FOS = min_FOS
         best_dimensions = dim
         best_buckling_FOS = buckling_FOS
+        diaphragm_remaining = total_diaphragm_area
 
 Load_Capacity = P * best_min_FOS
 print("the best dimensions are:", best_dimensions)
 print("the min FOS of this design is:", best_min_FOS)
 print("the load capacity of this design is:", Load_Capacity)
 print("FOS values are:", FoS)
+print("diaphragm area leftover", diaphragm_remaining)
 #print("the buckling FOS values are:", best_buckling_FOS)
-"""

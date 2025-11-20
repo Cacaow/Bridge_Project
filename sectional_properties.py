@@ -2,7 +2,7 @@ from fold_envelope import compute_envelope
 import math
 import numpy as np
 
-tft = 1.27 * 1
+tft = 1.27 * 2
 bft = 1.27 
 t_web = 1.27 * 1
 t_glue = 1.27
@@ -40,7 +40,6 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
     I_glue = 2 * ((w_glue * t_glue**3 / 12) + (A_glue/2 * (y_glue - ybar)**2))
     I_total = I_top + I_bottom + I_web + I_glue
-    print("Moment of Inertia is:", I_total)
 
     #Q at centroid
     Q_cent = A_bottom*(ybar- bft/2) + (t_web*(ybar - bft))*((ybar - bft)/2)*2
@@ -49,7 +48,7 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     SFD_env, BMD_env = graphs
     S_top = abs(BMD_env) * (tft + h_web + bft - ybar) / I_total
     S_bot = abs(BMD_env) * ybar / I_total
-    T_cent = abs(BMD_env) * Q_cent / (I_total * t_web * 2)
+    T_cent = abs(SFD_env) * Q_cent / (I_total * t_web * 2)
     T_glue = abs(SFD_env) * A_top * (y_top - ybar) / (I_total * t_web * 2)
 
     #Thin Plate Buckling Calculations
