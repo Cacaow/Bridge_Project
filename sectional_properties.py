@@ -13,7 +13,7 @@ S_comp = 6
 T_max = 4
 T_gmax = 2
 
-def prop(h_web, tfw, bfw, d_web, graphs=None):
+def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     """Compute factors of safety for a section.
 
     `graphs`, if provided, should be the tuple returned by
@@ -35,7 +35,6 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
     I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2)
     I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
     I_total = I_top + I_bottom + I_web
-    print("Moment of Inertia is:", I_total)
 
     #Q at centroid
     y_glue_top = bft + h_web
@@ -44,33 +43,38 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
 
     #Stress calculations
     SFD_env, BMD_env = graphs
-    S_top = abs(BMD_env) * (tft + h_web + bft - ybar) / I_total
-    S_bot = abs(BMD_env) * ybar / I_total
-    T_cent = abs(SFD_env) * Q_cent / (I_total * t_web * 2)
-    T_glue = abs(SFD_env) * A_top * (y_top - ybar) / (I_total * t_web * 2)
+    S_top = abs(graphs[0]) * (tft + h_web + bft - ybar) / I_total
+    S_bot = abs(graphs[1]) * ybar / I_total
+    T_cent = abs(graphs[0]) * Q_cent / (I_total * t_web * 2)
+    T_glue = abs(graphs[0]) * A_top * (y_top - ybar) / (I_total * t_web * 2)
 
-    #Thin Plate 
-    #case 1: Compresion in the top flange
+    #Thin Plate Buckling Calculations
+
+    ### Top Flange Buckling ###
+    #case 1: Compresion in the top flange between the webs
     k1 = 4
-    #strange calculation??
-    b1 = tfw - (tfw - bfw) - (t_web/2 * 2)
-    S_b1 = (k1 * math.pi**2 * E) / (12 * (1 - mu**2)) * (tft / b1)**2
+    t1 = tft
+    b1 = d_web
+    S_b1 = (k1 * math.pi**2 * E) / (12 * (1 - mu**2)) * (t1 / b1)**2
 
-    #case 2: Compression in the bottom flange
+    #case 2: Compression in the tips of the top flange
     k2 = 0.425
-    b2 = (tfw - d_web - t_web * 2) / 2
-    S_b2 = (k2 * math.pi**2 * E) / (12 * (1 - mu**2)) * (tft / b2)**2
+    t2 = tft
+    b2 = (tfw - d_web - 2 * t_web) / 2
+    S_b2 = (k2 * math.pi**2 * E) / (12 * (1 - mu**2)) * (t2 / b2)**2
 
-    #case 3: Buckling in web
+    #case 3: Buckling in webs due to flexural stress
     k3 = 6
-    b3 = t_web
-    t3 = (h_web + bft - ybar)
-    S_b3 = (k3 * math.pi**2 * E) / (12 * (1 - mu**2)) * (h_web / t_web)**2
+    t3 = t_web
+    b3 = bft + h_web - ybar
+    S_b3 = (k3 * math.pi**2 * E) / (12 * (1 - mu**2)) * (t3 / b3)**2
 
-    #case 4: Shear in web
+    #case 4: Shear stress in the diaphrams/webs
     k_shear = 5
-    T_b = (k_shear * math.pi**2 * E) / (12 * (1 - mu**2)) * ((t_web / h_web)**2 + (t_web/d_web)**2)
-
+    tV = t_web
+    hV = h_web
+    aV = a_web
+    T_b = (k_shear * math.pi**2 * E) / (12 * (1 - mu**2)) * ((tV / hV)**2 + (tV / aV)**2)
 
     #FOS
     FOS_tens = S_tens / max(S_bot)
@@ -81,7 +85,7 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
     FOS_buckling2 = S_b2 / max(S_bot)
     FOS_buckling3 = S_b3 / max(S_top)
     FOS_buckling4 = T_b / max(T_cent)
-    
+
     FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_glue, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
     Pfail = []
     """
