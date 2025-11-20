@@ -25,9 +25,9 @@ lower_flange_thickness = 1
 webbing_thickness = 1 
 
 # how much each loop increments by (lower = more accurate)
-upper_flange_step = 1
-lower_flange_step = 1
-distance_between_webbing_step = 1
+upper_flange_step = 5
+lower_flange_step = 5
+distance_between_webbing_step = 5
 
 # upper bounds of dimensions
 upper_flange_bound = 150
@@ -38,13 +38,13 @@ lower_flange_bound = 100
 
 dimensions = []
 
-for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness))), 150, 20):
+for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness)) + 10), 150, 20):
     for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
         for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
             for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step):
                 total_diaphragm_area = 813 * 1016 - 1260 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
-                if total_diaphragm_area > 0:
-                    diaphragm_spacing = 1260/(total_diaphragm_area / (distance_between_webbing * height))
+                if total_diaphragm_area > 2 * distance_between_webbing * height + 10000:
+                    diaphragm_spacing = 1260/((total_diaphragm_area-10000) // (distance_between_webbing * height))
                     dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area]
                     dimensions.append(dimension)
 
@@ -86,7 +86,7 @@ for dim in dimensions:
     #SFD_BMD(L, n, P_train, x) 
     
     # pass precomputed graphs to avoid recomputing envelope each iteration
-    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], dim[4], upper_flange_height, lower_flange_height, webbing_width, graphs=graphs)
+    FoS, buckling_FOS = prop(dim[0] - 10 , dim[1], dim[2], dim[3], dim[4], upper_flange_height, lower_flange_height, webbing_width, graphs=graphs)
     
     min_FOS = min(FoS)
 
