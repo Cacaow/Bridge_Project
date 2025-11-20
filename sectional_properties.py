@@ -2,9 +2,6 @@ from fold_envelope import compute_envelope
 import math
 import numpy as np
 
-tft = 1.27 * 2
-bft = 1.27 
-t_web = 1.27 * 1
 #t_glue = 1.27
 #w_glue = 5
 #a_web = 20
@@ -15,7 +12,7 @@ S_comp = 6
 T_max = 4
 T_gmax = 2
 
-def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
+def prop(h_web, tfw, bfw, d_web, a_web, tft, bft, t_web, graphs=None):
     """Compute factors of safety for a section.
 
     `graphs`, if provided, should be the tuple returned by
