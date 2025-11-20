@@ -46,6 +46,7 @@ def prop(h_web, tfw, bfw, d_web, graphs=None):
     S_top = abs(BMD_env) * (tft + h_web + bft - ybar) / I_total
     S_bot = abs(BMD_env) * ybar / I_total
     T_cent = abs(SFD_env) * Q_cent / (I_total * t_web * 2)
+    T_glue = abs(SFD_env) * A_top * (y_top - ybar) / (I_total * t_web * 2)
 
     #Thin Plate 
     #case 1: Compresion in the top flange
