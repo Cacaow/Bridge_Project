@@ -7,7 +7,7 @@ import math
 
 
 #initalize values
-L = 1200
+L = 1260
 n = 1200
 dx = L/n
 x = [i*dx for i in range(n)]
@@ -91,7 +91,7 @@ for dim in dimensions:
     min_FOS = min(FoS)
 
     if min_FOS > best_min_FOS:
-        min_FOS = min(FoS)
+        Factors_of_Safety = FoS
         best_min_FOS = min_FOS
         best_dimensions = dim
         best_buckling_FOS = buckling_FOS
@@ -101,6 +101,6 @@ Load_Capacity = P * best_min_FOS
 print("the best dimensions are:", best_dimensions)
 print("the min FOS of this design is:", best_min_FOS)
 print("the load capacity of this design is:", Load_Capacity)
-print("FOS values are:", FoS)
+print("FOS values are:", Factors_of_Safety)
 #print("diaphragm area leftover", diaphragm_remaining)
 #print("the buckling FOS values are:", best_buckling_FOS)

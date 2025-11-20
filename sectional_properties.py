@@ -92,6 +92,7 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     FOS_buckling3 = S_b3 / max(S_top)
     FOS_buckling4 = T_b / max(T_cent)
 
+    FOS_glue = 10000000
 
     FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_glue, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
     Pfail = []
