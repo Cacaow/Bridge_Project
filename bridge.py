@@ -20,7 +20,7 @@ P_train = [P/6]*6
 ## MANUAL INPUTS
 
 # number of layers for specific members
-upper_flange_thickness = 2
+upper_flange_thickness = 1
 lower_flange_thickness = 1
 webbing_thickness = 1 
 
@@ -86,7 +86,7 @@ for dim in dimensions:
     #SFD_BMD(L, n, P_train, x) 
     
     # pass precomputed graphs to avoid recomputing envelope each iteration
-    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], dim[4], graphs=graphs)
+    FoS, buckling_FOS = prop(dim[0], dim[1], dim[2], dim[3], dim[4], upper_flange_height, lower_flange_height, webbing_width, graphs=graphs)
     
     min_FOS = min(FoS)
 

@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from SB_calculations import SFD_BMD 
 
 def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
