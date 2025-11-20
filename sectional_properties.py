@@ -5,8 +5,8 @@ import numpy as np
 tft = 1.27 * 2
 bft = 1.27 
 t_web = 1.27 * 1
-t_glue = 1.27
-w_glue = 5
+#t_glue = 1.27
+#w_glue = 5
 #a_web = 20
 E = 4000
 mu = 0.2
@@ -25,21 +25,24 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     A_top = tfw * tft
     A_bottom = bfw * bft
     A_web = 2 * (h_web * t_web)
-    A_glue = 2 * w_glue * t_glue
-    A_total = A_top + A_bottom + A_web + A_glue
+    #A_glue = 2 * w_glue * t_glue
+    A_total = A_top + A_bottom + A_web 
+    #+ A_glue
 
     y_top = h_web + bft + tft/2
     y_bot = bft/2
     y_web = bft + h_web/2
-    y_glue = bft + h_web - t_glue/2
+    #y_glue = bft + h_web - t_glue/2
 
-    ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web + A_glue * y_glue) / A_total
+    ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web) / A_total
+    #+ A_glue * y_glue
 
     I_top = (tfw * tft**3 / 12) + (A_top * (y_top - ybar)**2)
     I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2)
     I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
-    I_glue = 2 * ((w_glue * t_glue**3 / 12) + (A_glue/2 * (y_glue - ybar)**2))
-    I_total = I_top + I_bottom + I_web + I_glue
+    #I_glue = 2 * ((w_glue * t_glue**3 / 12) + (A_glue/2 * (y_glue - ybar)**2))
+    I_total = I_top + I_bottom + I_web 
+    #+ I_glue
 
     #Q at centroid
     Q_cent = A_bottom*(ybar- bft/2) + (t_web*(ybar - bft))*((ybar - bft)/2)*2
@@ -89,6 +92,7 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
     FOS_buckling3 = S_b3 / max(S_top)
     FOS_buckling4 = T_b / max(T_cent)
 
+
     FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_glue, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
     Pfail = []
     """
@@ -102,10 +106,10 @@ def prop(h_web, tfw, bfw, d_web, a_web, graphs=None):
 
     Vf_shear = FOS[2] * np.abs(SFD_env)
 
-    Mf_buckling1 = FOS[3] * np.abs(BMD_env)
-    Mf_buckling2 = FOS[4] * np.abs(BMD_env)
-    Mf_buckling3 = FOS[5] * np.abs(BMD_env)
-    Vf_buckling4 = FOS[6] * np.abs(SFD_env)
+    Mf_buckling1 = FOS[4] * np.abs(BMD_env)
+    Mf_buckling2 = FOS[5] * np.abs(BMD_env)
+    Mf_buckling3 = FOS[6] * np.abs(BMD_env)
+    Vf_buckling4 = FOS[7] * np.abs(SFD_env)
 
     buckle = [Mf_buckling1, Mf_buckling2, Mf_buckling3, Vf_buckling4]
 

@@ -25,22 +25,22 @@ lower_flange_thickness = 1
 webbing_thickness = 1 
 
 # how much each loop increments by (lower = more accurate)
-upper_flange_step = 20
-lower_flange_step = 20
-distance_between_webbing_step = 20
+upper_flange_step = 5
+lower_flange_step = 5
+distance_between_webbing_step = 5
 
 # upper bounds of dimensions
-upper_flange_bound = 300
-lower_flange_bound = 300
+upper_flange_bound = 150
+lower_flange_bound = 150
 
 
 ## loop to create list of all viable dimensions, in mm
 
 dimensions = []
 
-for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness))), 200, 20):
-    for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
-        for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
+for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness))), 150, 20):
+    for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
+        for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
             for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step):
                 total_diaphragm_area = 813 * 1016 - 1250 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
                 if total_diaphragm_area > 0:
@@ -91,6 +91,7 @@ for dim in dimensions:
     min_FOS = min(FoS)
 
     if min_FOS > best_min_FOS:
+        min_FOS = min(FoS)
         best_min_FOS = min_FOS
         best_dimensions = dim
         best_buckling_FOS = buckling_FOS
@@ -101,5 +102,5 @@ print("the best dimensions are:", best_dimensions)
 print("the min FOS of this design is:", best_min_FOS)
 print("the load capacity of this design is:", Load_Capacity)
 print("FOS values are:", FoS)
-print("diaphragm area leftover", diaphragm_remaining)
-print("the buckling FOS values are:", best_buckling_FOS)
+#print("diaphragm area leftover", diaphragm_remaining)
+#print("the buckling FOS values are:", best_buckling_FOS)
