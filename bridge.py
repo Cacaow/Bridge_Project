@@ -33,20 +33,21 @@ distance_between_webbing_step = 5
 upper_flange_bound = 150
 lower_flange_bound = 100
 
+scrap = 20000 #area of scrap left after cutting matboard (mm^2), want to make this large enough so we can actually cut out everything (most optimal design probably cannot geometrically fit into the matboard area)
 
 ## loop to create list of all viable dimensions, in mm
 
 dimensions = []
 
-for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness)) + 10), 150, 20):
-    for lower_flange_length in range(60, lower_flange_bound, lower_flange_step):
-        for upper_flange_length in range(100, upper_flange_bound, upper_flange_step):
-            for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step):
-                total_diaphragm_area = 813 * 1016 - 1260 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness)
-                if total_diaphragm_area > 2 * distance_between_webbing * height + 10000:
-                    diaphragm_spacing = 1260/((total_diaphragm_area-10000) // (distance_between_webbing * height))
-                    dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area]
-                    dimensions.append(dimension)
+for height in range(20-int((1.27*(upper_flange_thickness + lower_flange_thickness)) + 10), 150, 20): #looping through possible heights, subtracted lower bound to ensure height of bridge is a factor of 20
+    for lower_flange_length in range(60, lower_flange_bound, lower_flange_step): #looping through lower flange lengths
+        for upper_flange_length in range(100, upper_flange_bound, upper_flange_step): #looping through upper flange lengths
+            for distance_between_webbing in range(50,max(upper_flange_length+1,lower_flange_length+1), distance_between_webbing_step): #looping through distances between the 2 webbings
+                total_diaphragm_area = 813 * 1016 - 1260 * (upper_flange_length * upper_flange_thickness + lower_flange_length * lower_flange_thickness + 2*height*webbing_thickness) #calculating area on matboard remaining for diaphragms (not including thickness of matboard)
+                if total_diaphragm_area > 2 * distance_between_webbing * height + scrap: #ensures no div by zero errors, also there should be enough spaces for 2+ diaphragms
+                    diaphragm_spacing = 1260/((total_diaphragm_area-scrap) // (distance_between_webbing * height)) #spacing between diaphragms
+                    dimension = [height, upper_flange_length, lower_flange_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area] 
+                    dimensions.append(dimension) #appends set of dimensions into nested list "dimensions"
 
 
 
