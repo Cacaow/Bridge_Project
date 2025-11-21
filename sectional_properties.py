@@ -21,8 +21,8 @@ def prop(h_web, tfw, bfw, d_web, a_web, tft, bft, t_web, graphs=None):
     # Area calculations
     A_top = tfw * tft                       # Area of top flange
     A_bottom = bfw * bft                    # Area of bottom flange
-    A_web = 2 * (h_web * t_web)             # Area of both webs
-    A_glue = 2 * w_glue * t_glue            # Area of glue lines
+    A_web = 2 * ((h_web - bft - t_glue) * t_web)             # Area of both webs
+    A_glue = 2 * w_glue * t_glue            # Area of glue tabs
     A_total = A_top + A_bottom + A_web + A_glue      # Total area
 
     # Centroid calculations
@@ -91,12 +91,7 @@ def prop(h_web, tfw, bfw, d_web, a_web, tft, bft, t_web, graphs=None):
     FOS_glue = 10000000
 
     FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_glue, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
-    Pfail = []
-    """
-    for j in FOS:
-        Pfails = P_train * 6 * j
-        Pfail.append(Pfails)
-    """
+    
     #Vfail and Mfail
     Mf_tens = FOS[0] * np.abs(BMD_env)
     Mf_comps = FOS[1] * np.abs(BMD_env)
