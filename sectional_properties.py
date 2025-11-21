@@ -21,8 +21,8 @@ def prop(h_web, tfw, bfw, d_web, a_web, tft, bft, t_web, graphs=None):
     # Area calculations
     A_top = tfw * tft                       # Area of top flange
     A_bottom = bfw * bft                    # Area of bottom flange
-    A_web = 2 * (h_web * t_web)             # Area of both webs
-    A_glue = 2 * w_glue * t_glue            # Area of glue 
+    A_web = 2 * ((h_web - bft - t_glue) * t_web)             # Area of both webs
+    A_glue = 2 * w_glue * t_glue            # Area of glue tabs
     A_total = A_top + A_bottom + A_web + A_glue      # Total area
 
     # Centroid calculations
