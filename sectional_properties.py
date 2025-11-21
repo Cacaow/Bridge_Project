@@ -91,12 +91,7 @@ def prop(h_web, tfw, bfw, d_web, a_web, tft, bft, t_web, graphs=None):
     FOS_glue = 10000000
 
     FOS = [FOS_tens, FOS_comp, FOS_shear, FOS_glue, FOS_buckling1, FOS_buckling2, FOS_buckling3, FOS_buckling4]
-    Pfail = []
-    """
-    for j in FOS:
-        Pfails = P_train * 6 * j
-        Pfail.append(Pfails)
-    """
+    
     #Vfail and Mfail
     Mf_tens = FOS[0] * np.abs(BMD_env)
     Mf_comps = FOS[1] * np.abs(BMD_env)
