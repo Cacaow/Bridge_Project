@@ -2,9 +2,8 @@ from fold_envelope import compute_envelope
 import math
 import numpy as np
 
-#t_glue = 1.27
-#w_glue = 5
-#a_web = 20
+t_glue = 1.27
+w_glue = 5
 E = 4000
 mu = 0.2
 S_tens = 30
@@ -19,27 +18,27 @@ def prop(h_web, tfw, bfw, d_web, a_web, tft, bft, t_web, graphs=None):
     `compute_envelope` -> `(x, SFD_env, BMD_env)` so the heavy envelope
     calculation can be performed once and reused across many calls.
     """
-    A_top = tfw * tft
-    A_bottom = bfw * bft
-    A_web = 2 * (h_web * t_web)
-    #A_glue = 2 * w_glue * t_glue
-    A_total = A_top + A_bottom + A_web 
-    #+ A_glue
+    # Area calculations
+    A_top = tfw * tft                       # Area of top flange
+    A_bottom = bfw * bft                    # Area of bottom flange
+    A_web = 2 * (h_web * t_web)             # Area of both webs
+    A_glue = 2 * w_glue * t_glue            # Area of glue lines
+    A_total = A_top + A_bottom + A_web + A_glue      # Total area
 
-    y_top = h_web + bft + tft/2
-    y_bot = bft/2
-    y_web = bft + h_web/2
-    #y_glue = bft + h_web - t_glue/2
+    # Centroid calculations
+    y_top = h_web + bft + tft/2             # Centroid location of top flange
+    y_bot = bft/2                           # Centroid location of bottom flange
+    y_web = bft + h_web/2                   # Centroid location of webs
+    y_glue = bft + h_web - t_glue/2         # Centroid location of glue tabs
 
-    ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web) / A_total
-    #+ A_glue * y_glue
+    ybar = (A_top * y_top + A_bottom * y_bot + A_web * y_web + A_glue * y_glue) / A_total   # Centroidal axis location
 
-    I_top = (tfw * tft**3 / 12) + (A_top * (y_top - ybar)**2)
-    I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2)
-    I_web = 2 * ((t_web * h_web**3 / 12) + (A_web/2 * (y_web - ybar)**2))
-    #I_glue = 2 * ((w_glue * t_glue**3 / 12) + (A_glue/2 * (y_glue - ybar)**2))
-    I_total = I_top + I_bottom + I_web 
-    #+ I_glue
+    # Second moment of area calculations
+    I_top = (tfw * tft**3 / 12) + (A_top * (y_top - ybar)**2)   # Second moment of area of top flange
+    I_bottom = (bfw * bft**3 / 12) + (A_bottom * (y_bot - ybar)**2) # Second moment of area of bottom flange
+    I_web = 2 * ((t_web * (h_web - bft - t_glue)**3 / 12) + (A_web/2 * (y_web - ybar)**2))   # Second moment of area of both webs
+    I_glue = 2 * ((w_glue * t_glue**3 / 12) + (A_glue/2 * (y_glue - ybar)**2)) # Second moment of area of glue tabs
+    I_total = I_top + I_bottom + I_web + I_glue    # Total second moment of area
 
     #Q at centroid
     Q_cent = A_bottom*(ybar- bft/2) + (t_web*(ybar - bft))*((ybar - bft)/2)*2
