@@ -9,19 +9,22 @@ distance_between_webbing_step = 5
 tf_bound = 150
 bf_bound = 100
 
-def optimize(P, tft, bft, webbing_thickness, distance_between_webbing_step, tf_height, bf_height, webbing_width, graphs):
+def optimize(P, t_web, distance_between_webbing_step, tf_thickness, bf_thickness, webbing_thickness, graphs):
     ## loop to create list of all viable dimensions, in mm
     dimensions = []
 
     ## FINDING OPTIMAL DESIGN (loop)
     best_min_FOS = 0
     best_dimensions = []
+    tf_height = 1.27 * tf_thickness
+    bf_height = 1.27 * bf_thickness
+    webbing_width = 1.27 * webbing_thickness
 
-    for height in range(20-int((1.27*(tft + bft)) + 10), 150, 20):
+    for height in range(20-int((tf_height + bf_height) + 10), 150, 20):
         for bf_length in range(60, bf_bound, bf_step):
             for tf_length in range(100, tf_bound, tf_step):
                 for distance_between_webbing in range(50,max(tf_length+1,bf_length+1), distance_between_webbing_step):
-                    total_diaphragm_area = 813 * 1016 - 1260 * (tf_length * tft + bf_length * bft + 2*height*webbing_thickness)
+                    total_diaphragm_area = 813 * 1016 - 1260 * (tf_length * tf_thickness + bf_length * bf_thickness + 2*height*t_web)
                     if total_diaphragm_area > 2 * distance_between_webbing * height + 10000:
                         diaphragm_spacing = 1260/((total_diaphragm_area-10000) // (distance_between_webbing * height))
                         dimension = [height, tf_length, bf_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area]
@@ -46,5 +49,5 @@ def optimize(P, tft, bft, webbing_thickness, distance_between_webbing_step, tf_h
     print("the min FOS of this design is:", best_min_FOS)
     print("the load capacity of this design is:", Load_Capacity)
     print("FOS values are:", Factors_of_Safety)
-    #print("diaphragm area leftover", diaphragm_remaining)
-    #print("the buckling FOS values are:", best_buckling_FOS)
+    print("diaphragm area leftover", diaphragm_remaining)
+    print("the buckling FOS values are:", best_buckling_FOS)

@@ -2,20 +2,6 @@ import numpy as np
 
 
 def SFD_BMD(L, n, P_train, x0, axle_offsets=None):
-    """Compute Shear Force Diagram (SFD) and Bending Moment Diagram (BMD).
-
-    This version safely pairs axle offsets and loads, filters only loads
-    that are on the bridge (0 <= xi <= L), and vectorizes the SFD/BMD
-    computation to avoid index-mismatch IndexErrors.
-
-    Parameters
-    - L: bridge length
-    - n: number of divisions
-    - P_train: sequence of axle loads (length should match axle_offsets)
-    - x0: position of first axle
-    - axle_offsets: list/array of axle offsets from first axle. If None,
-      a default set matching original code is used.
-    """
 
     if axle_offsets is None:
         axle_offsets = np.array([0, 176, 340, 516, 680, 856])

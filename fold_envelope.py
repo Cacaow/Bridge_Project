@@ -2,10 +2,6 @@ import numpy as np
 from SB_calculations import SFD_BMD 
 
 def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
-    """
-    Compute shear force and bending moment envelopes for a train
-    moving across a simply supported bridge — NO zip() used.
-    """
 
     x = np.linspace(0, L, n+1)
     SFD_max = np.zeros(n+1)
@@ -58,8 +54,6 @@ def compute_envelope(L, n, P_train, axle_positions, dx_step=1):
     """
     return SFD_max, BMD_max
 
-
-# ----- Example usage -----
 
 
 
