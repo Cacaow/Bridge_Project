@@ -31,7 +31,7 @@ mu = 0.2
 # compute_envelope returns (SFD_env, BMD_env)
 graphs = compute_envelope(L, n, P_train, x_train, dx)
 
-#optimize(400, webbing_thickness, 5, tf_thickness, bf_thickness, webbing_thickness, graphs)
+#optimize(400, webbing_thickness, 5, tf_thickness, bf_thickness, webbing_thickness, 10000, graphs)
 
 
 #DESIGN 0 CALCULATIONS

@@ -9,7 +9,7 @@ distance_between_webbing_step = 5
 tf_bound = 150
 bf_bound = 100
 
-def optimize(P, t_web, distance_between_webbing_step, tf_thickness, bf_thickness, webbing_thickness, graphs):
+def optimize(P, t_web, distance_between_webbing_step, tf_thickness, bf_thickness, webbing_thickness, scrap, graphs):
     ## loop to create list of all viable dimensions, in mm
     dimensions = []
 
@@ -25,8 +25,8 @@ def optimize(P, t_web, distance_between_webbing_step, tf_thickness, bf_thickness
             for tf_length in range(100, tf_bound, tf_step):
                 for distance_between_webbing in range(50,max(tf_length+1,bf_length+1), distance_between_webbing_step):
                     total_diaphragm_area = 813 * 1016 - 1260 * (tf_length * tf_thickness + bf_length * bf_thickness + 2*height*t_web)
-                    if total_diaphragm_area > 2 * distance_between_webbing * height + 10000:
-                        diaphragm_spacing = 1260/((total_diaphragm_area-10000) // (distance_between_webbing * height))
+                    if total_diaphragm_area > 2 * distance_between_webbing * height + scrap:
+                        diaphragm_spacing = 1260/((total_diaphragm_area-scrap) // (distance_between_webbing * height))
                         dimension = [height, tf_length, bf_length, distance_between_webbing, diaphragm_spacing, total_diaphragm_area]
                         dimensions.append(dimension)
     for dim in dimensions: 
